@@ -1,0 +1,31 @@
+import torch
+
+def sigmoid(x):
+    return torch.sigmoid(x)
+
+x = torch.tensor([0.5, 0.2, 0.1], dtype=torch.float32)
+
+W = torch.tensor([
+    [0.1, 0.3],
+    [0.6, 0.8],
+    [0.6, 0.3]
+], dtype=torch.float32)
+
+b1 = torch.tensor([0.01, 0.02], dtype=torch.float32)
+
+z1 = torch.matmul(x, W) + b1
+h = sigmoid(z1)
+
+print("Hidden layer output:", h)
+
+b2 = torch.tensor(0.01, dtype=torch.float32)
+z2 = torch.sum(h) + b2
+y_pred = sigmoid(z2)
+
+print("Predicted output:", y_pred)
+
+y = torch.tensor(1.0, dtype=torch.float32)
+
+loss = -(y * torch.log(y_pred) + (1 - y) * torch.log(1 - y_pred))
+
+print("Loss:", loss)
