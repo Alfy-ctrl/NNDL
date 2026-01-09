@@ -1,0 +1,57 @@
+import tensorflow as tf
+import numpy as np
+
+class SimpleNeuralNetwork(tf.keras.Model):
+
+    def __init__(self):
+        super(SimpleNeuralNetwork, self).__init__()
+
+        # Hidden layer: 3 inputs → 2 neurons
+        self.hidden = tf.keras.layers.Dense(
+            units=2,
+            activation="sigmoid",
+            use_bias=True
+        )
+
+        self.output_layer = tf.keras.layers.Dense(
+            units=1,
+            activation="sigmoid",
+            use_bias=True
+        )
+
+        self.hidden.build((None, 3))
+        self.output_layer.build((None, 2))
+
+        self.hidden.set_weights([
+            np.array([
+                [0.1, 0.3],
+                [0.6, 0.8],
+                [0.6, 0.3]
+            ]),                      # W
+            np.array([0.01, 0.02])    # b1
+        ])
+
+        self.output_layer.set_weights([
+            np.array([[1.0], [1.0]]), # sum of hidden neurons
+            np.array([0.01])          # b2
+        ])
+
+    def call(self, x):
+        h = self.hidden(x)
+        y_pred = self.output_layer(h)
+        return y_pred
+
+
+x = np.array([[0.5, 0.2, 0.1]])  # shape (1, 3)
+
+y = np.array([[1]])
+
+model = SimpleNeuralNetwork()
+
+y_pred = model(x)
+
+loss_fn = tf.keras.losses.BinaryCrossentropy()
+loss = loss_fn(y, y_pred)
+
+print("Predicted output:", y_pred.numpy()[0][0])
+print("Loss:", loss.numpy())
