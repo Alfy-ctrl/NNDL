@@ -1,0 +1,44 @@
+import torch
+import torch.nn as nn
+
+class SimpleNeuralNetwork(nn.Module):
+
+    def __init__(self):
+        super(SimpleNeuralNetwork, self).__init__()
+
+        self.W = torch.tensor([
+            [0.1, 0.3],
+            [0.6, 0.8],
+            [0.6, 0.3]
+        ], dtype=torch.float32)
+
+        self.b1 = torch.tensor([0.01, 0.02], dtype=torch.float32)
+        self.b2 = torch.tensor(0.01, dtype=torch.float32)
+
+    def sigmoid(self, x):
+        return torch.sigmoid(x)
+
+    def forward(self, x):
+        z1 = torch.matmul(x, self.W) + self.b1
+        h = self.sigmoid(z1)
+
+        z2 = torch.sum(h) + self.b2
+        y_pred = self.sigmoid(z2)
+
+        return y_pred
+
+    def loss(self, y, y_pred):
+        return -(y * torch.log(y_pred) + (1 - y) * torch.log(1 - y_pred))
+
+x = torch.tensor([0.5, 0.2, 0.1], dtype=torch.float32)
+
+y = torch.tensor(1.0, dtype=torch.float32)
+
+model = SimpleNeuralNetwork()
+
+y_pred = model.forward(x)
+
+loss = model.loss(y, y_pred)
+
+print("Predicted output:", y_pred.item())
+print("Loss:", loss.item())
